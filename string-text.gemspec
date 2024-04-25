@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require_relative "lib/string_text/version"
+require_relative "lib/string-text/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "string_text"
-  spec.version = StringText::VERSION
+  spec.name = "string-text"
+  spec.version = String::Text::VERSION
   spec.authors = ["Claus Rasmussen"]
   spec.email = ["claus.l.rasmussen@gmail.com"]
 
-  spec.summary = "Gem string_text"
-  spec.description = "Gem string_text"
+  spec.summary = "Text formatting methods"
+  spec.description = "Gem string-text"
   spec.homepage = "http://www.nowhere.com/"
   spec.required_ruby_version = ">= 2.6.0"
 

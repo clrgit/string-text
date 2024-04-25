@@ -3,7 +3,7 @@
 
 # frozen_string_literal: true
 
-require "string_text"
+require "string-text"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
