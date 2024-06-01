@@ -21,8 +21,8 @@ module String::Text
       r.join("\n").chomp
     end
 
-    # Converts a string to a boolean so that "true" becomes true and "false" and
-    # the empty string becomes false. Should actually go in to a 
+    # Converts a string to a boolean so that "true" becomes true and "false"
+    # and the empty string becomes false
     def to_b
       case self
         when "true"; true
