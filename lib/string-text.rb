@@ -8,16 +8,17 @@ module String::Text
   refine String do
     # Indent or outdent a block of text to the given column. It uses the indent
     # of the non-empty line as the indent of the whole block that is then
-    # adjusted as a whole (including internal indents) to the given column
+    # aligned as a whole (including internal indents) to the given column
     #
-    # It is often handy when you're calling methods with a %(...) argument:
+    # It is often handy when you're calling methods with a %(...) argument and
+    # don't want weird indentation in your output
     #
-    #   some_method %(
-    #     This will start at column 1
-    #       This will start at column 3
-    #   ).adjust
+    #   puts %(
+    #     This line will start at column 1
+    #       This line will start at column 3
+    #   ).align
     #
-    def adjust(column = 1)
+    def align(column = 1)
       column == 1 or raise NotImplementedError
       lines = self.split(/\n/)
       lines.shift while !lines.empty? && !(lines.first =~ /^(\s*)\S/)
