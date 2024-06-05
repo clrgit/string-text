@@ -1,0 +1,12 @@
+
+TODO
+  + Rename #undent -> #align
+
+IDEA
+  string-ext_text
+  string-ext_to_b
+
+  lib/<project>/ext/string.rb
+    -> require 'string-ext/text.rb'
+       require 'string-ext/to_b.rb'
+
