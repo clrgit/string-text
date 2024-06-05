@@ -30,7 +30,8 @@ describe "String::Text" do
       it "internal empty lines are not indented" do
         expect("  line1\n    \n    line2\n".align).to eq "line1\n\n  line2"
       end
-      it "removes final whitespace" do
+      it "removes final whitespace or newline" do
+        expect("text  ".align).to eq "text"
         expect("text  \n".align).to eq "text"
         expect("line1  \nline2  \n".align).to eq "line1\nline2"
       end
