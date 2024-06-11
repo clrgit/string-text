@@ -26,7 +26,7 @@ module String::Text
       lines.shift while !lines.empty? && !(lines.first =~ /^(\s*)\S/)
       return "" if lines.empty?
       indent = $1.size
-      lines.map { |line| line[indent..-1].rstrip || "" }.join("\n")
+      lines.map { |line| line[indent..-1]&.rstrip || "" }.join("\n")
     end
 
     # Converts a string to a boolean so that "true" becomes true and that
