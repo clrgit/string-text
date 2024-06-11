@@ -35,6 +35,9 @@ describe "String::Text" do
         expect("text  \n".align).to eq "text"
         expect("line1  \nline2  \n".align).to eq "line1\nline2"
       end
+      it "handles empty lines" do
+        expect("  text\n\n    text".align).to eq "text\n\n  text"
+      end
     end
   end
 
