@@ -18,6 +18,12 @@ describe "String::Text" do
       it "ignores initial empty lines" do
         expect("\n\ntext".align).to eq "text"
       end
+      it "removes the initial indent for all lines" do
+        expect("\n  text".align).to eq "text"
+      end
+      it "uses the indent of the least indented line as the block indent" do
+        expect("    line1\n  line2\n".align).to eq "  line1\nline2"
+      end
       it "removes the initial indent from the first line" do
         expect("\n  text".align).to eq "text"
       end

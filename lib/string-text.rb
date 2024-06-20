@@ -7,9 +7,9 @@ module String::Text
   
   refine String do
     # Indent or outdent a block of text to the given column (default 1). It
-    # uses the indent of the non-empty line as the indent of the whole block
-    # that is then aligned as a whole (including internal indents) to the given
-    # column.  Initial and final empty lines are ignored
+    # uses the indent of the least indented non-empty line as the indent of the
+    # whole block that is then aligned as a whole (including internal indents)
+    # to the given column. Initial and final empty lines are ignored
     #
     # #align is often handy when you call methods with a %(...) argument
     # and don't want weird indentation in your output
@@ -23,9 +23,9 @@ module String::Text
       column == 1 or raise NotImplementedError
       lines = self.split(/\n/)
       lines.pop while !lines.empty? && !(lines.last =~ /^\s*\S/)
-      lines.shift while !lines.empty? && !(lines.first =~ /^(\s*)\S/)
+      lines.shift while !lines.empty? && !(lines.first =~ /^\s*\S/)
       return "" if lines.empty?
-      indent = $1.size
+      indent = lines.map { _1 =~ /^(\s*)/; $1.size }.select { _1 > 0 }.min || 0
       lines.map { |line| line[indent..-1]&.rstrip || "" }.join("\n")
     end
 
