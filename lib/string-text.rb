@@ -6,10 +6,10 @@ module String::Text
   class Error < StandardError; end
   
   refine String do
-    # Indent or outdent a block of text to the given column. It uses the indent
-    # of the non-empty line as the indent of the whole block that is then
-    # aligned as a whole (including internal indents) to the given column.
-    # Initial and final empty lines are ignored
+    # Indent or outdent a block of text to the given column (default 1). It
+    # uses the indent of the non-empty line as the indent of the whole block
+    # that is then aligned as a whole (including internal indents) to the given
+    # column.  Initial and final empty lines are ignored
     #
     # #align is often handy when you call methods with a %(...) argument
     # and don't want weird indentation in your output
