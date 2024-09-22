@@ -4,7 +4,7 @@ require_relative "string-text/version"
 
 module String::Text
   class Error < StandardError; end
-  
+
   refine String do
     # Indent or outdent a block of text to the given column (default 1). It
     # uses the indent of the least indented non-empty line as the indent of the
@@ -28,6 +28,9 @@ module String::Text
       indent = lines.map { _1 =~ /^(\s*)/; $1.size }.select { _1 > 0 }.min || 0
       lines.map { |line| line[indent..-1]&.rstrip || "" }.join("\n")
     end
+
+    # Like #align but replaces the string
+    def align!(column = 1) = self.replace align(column)
 
     # Converts a string to a boolean so that "true" becomes true and that
     # "false" and the empty string becomes false. Any other string is an error
