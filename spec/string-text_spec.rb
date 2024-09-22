@@ -47,6 +47,14 @@ describe "String::Text" do
     end
   end
 
+  describe "#align!" do
+    it "replaces the value of the current string" do
+      s = "  text"
+      s.align!
+      expect(s).to eq "text"
+    end
+  end
+
   describe "#to_b" do
     it "translates 'true' to true" do
       expect("true".to_b).to eq true
