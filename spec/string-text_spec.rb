@@ -45,6 +45,19 @@ describe "String::Text" do
         expect("  text\n\n    text".align).to eq "text\n\n  text"
       end
     end
+    context "when column != 1" do
+      it "indents the text to the given column" do
+        expect("  text\n\n    text".align(3)).to eq "  text\n\n    text"
+      end
+    end
+  end
+
+  describe "#align!" do
+    it "replaces the value of the current string" do
+      s = "  text"
+      s.align!
+      expect(s).to eq "text"
+    end
   end
 
   describe "#align!" do
