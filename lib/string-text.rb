@@ -20,13 +20,17 @@ module String::Text
     #   ).align
     #
     def align(column = 1)
-      column == 1 or raise NotImplementedError
+      column > 0 or raise ArgumentError "Illegal column: #{column}"
+      initial = " " * (column - 1)
       lines = self.split(/\n/)
       lines.pop while !lines.empty? && !(lines.last =~ /^\s*\S/)
       lines.shift while !lines.empty? && !(lines.first =~ /^\s*\S/)
       return "" if lines.empty?
       indent = lines.map { _1 =~ /^(\s*)/; $1.size }.select { _1 > 0 }.min || 0
-      lines.map { |line| line[indent..-1]&.rstrip || "" }.join("\n")
+      lines.map { |line|
+        l = line[indent..-1]&.rstrip
+        l ? initial + l : ""
+      }.join("\n")
     end
 
     # Like #align but replaces the string
