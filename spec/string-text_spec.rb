@@ -50,13 +50,25 @@ describe "String::Text" do
         expect("  text\n\n    text".align(3)).to eq "  text\n\n    text"
       end
     end
-  end
-
-  describe "#align!" do
-    it "replaces the value of the current string" do
-      s = "  text"
-      s.align!
-      expect(s).to eq "text"
+    context "when :bol is false" do
+      it "do not align the first line" do
+        inner_text = %(
+          inner line 1
+          inner line 2
+        )
+        outer_text = %(
+          outer line 1
+            #{inner_text.align(13, bol: false)}
+          outer line 2
+        )
+        expected = %(
+          outer line 1
+            inner line 1
+            inner line 2
+          outer line 2
+        )
+        expect(outer_text.align).to eq expected.align
+      end
     end
   end
 
