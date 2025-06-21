@@ -8,8 +8,9 @@ module String::Text
   refine String do
     # Indent or outdent a block of text to the given column (default 1). It
     # uses the indent of the least indented non-empty line as the indent of the
-    # whole block that is then aligned as a whole (including internal indents)
-    # to the given column. Initial and final empty lines are ignored
+    # block that is then aligned as a whole to the given column. Lines starting
+    # at column one are realigned to the indent of the previous line. Initial
+    # and final empty lines are ignored.
     #
     # #align is often handy when you call methods with a %(...) argument
     # and don't want weird indentation in your output
@@ -19,36 +20,45 @@ module String::Text
     #       This line will start at column 3
     #   ).align
     #
-    # If :bol is false then the first line won't be indented or outdented. It
-    # is used when including a block of text in another block:
+    # Because unindented lines are realigned to the previous line's indent,
+    # lists can be indented like this
     #
-    #   innert_text = %(
-    #     first line
-    #     second line
-    #   )
+    #   words = %w(hello world)
     #   puts %(
-    #     Here is the outer text
-    #       #{inner_text.align(2, bol: false)}
-    #     Rest of the outer text
+    #     Array elements on separate lines and starting at column 3
+    #       #{words.join("\n")}
     #   ).align
+    #
+    # If :bol is false then the first line won't be indented or outdented
     #
     def align(column = 1, bol: true)
       column > 0 or raise ArgumentError "Illegal column: #{column}"
       initial = " " * (column - 1)
-      lines = self.split(/\n/)
+
+      # Remove initial and final empty lines
+      lines = self.split(/\n/).map &:rstrip
       lines.pop while !lines.empty? && !(lines.last =~ /^\s*\S/)
       lines.shift while !lines.empty? && !(lines.first =~ /^\s*\S/)
       return "" if lines.empty?
 
-      indent = lines.map { _1 =~ /^(\s*)/; $1.size }.select { _1 > 0 }.min || 0
+      # Find minimal indent. Ignores lines with indent 0
+      indents = lines.map { _1 =~ /^(\s*)/; $1.size }
+      indent = indents.select { _1 > 0 }.min || 0
+
       first = true
-      lines.map { |line|
-        l = line[indent..-1]&.rstrip
+      lines.map.with_index { |line, i|
         if !bol && first
           first = false
-          l || ""
+          line[indents[0]..-1]
         else
-          l ? initial + l : ""
+          if line.empty?
+            ""
+          elsif indents[i] == 0 && i > 0 # Unindented lines
+            indents[i] = indents[i-1] # use previous line's indent
+            ' ' * (indents[i] - indent) + line
+          else # Regular line
+            initial + line[indent..-1]
+          end
         end
       }.join("\n")
     end
