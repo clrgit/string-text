@@ -18,6 +18,21 @@ describe "String::Text" do
       it "ignores initial empty lines" do
         expect("\n\ntext".align).to eq "text"
       end
+      it "realigns lines starting at column 1" do
+        a = %w(hello world)
+        text = %(
+          before
+            #{a.join("\n")}
+          after
+        )
+        expected = %(
+          before
+            hello
+            world
+          after
+        )
+        expect(text.align).to eq expected.align
+      end
       it "removes the initial indent for all lines" do
         expect("\n  text".align).to eq "text"
       end
