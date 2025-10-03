@@ -58,12 +58,16 @@ module String::Text
       lines.shift while !lines.empty? && !(lines.first =~ /^\s*\S/)
       return "" if lines.empty?
 
+      # Only align to given column if first line is not indented
+      if String::Text.indentation(lines.first) == 0
+        return lines.map { |line| ' ' * (column-1) + line }.join("\n")
+      end
+
       # Identation level of each line
       indents = lines.map { String::Text.indentation(_1) }
 
-      # Find minimal indent. If the first line is not indented the minimal
-      # indent is 0, otherwise the smallest non-zero indent used
-      indent = String::Text.indentation(lines.first) == 0 ? 0 : indents.select { _1 > 0 }.min || 0
+      # Find minimal indent, ignoring unindented lines
+      indent = indents.select { _1 > 0 }.min || 0
 
       first = true
       lines.map.with_index { |line, i|
