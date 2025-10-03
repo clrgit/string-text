@@ -10,6 +10,9 @@ describe "String::Text" do
       it "removes initial indent" do
         expect("  text".align).to eq "text"
       end
+      it "does nothing if the line is not indented" do
+        expect("text".align).to eq "text"
+      end
       it "removes final whitespace" do
         expect("text  ".align).to eq "text"
       end
@@ -17,6 +20,12 @@ describe "String::Text" do
     context "when given a multiline string" do
       it "ignores initial empty lines" do
         expect("\n\ntext".align).to eq "text"
+      end
+      it "does not remove initial indent if first line is not indented" do
+        expect("level0\n  level1".align).to eq "level0\n  level1"
+      end
+      it "only realigns if the first line is not indented" do
+        expect("level0\n  level1".align(3)).to eq "  level0\n    level1"
       end
       it "realigns lines starting at column 1" do
         a = %w(hello world)
