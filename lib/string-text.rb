@@ -65,6 +65,7 @@ module String::Text
         line = lines.find { |line| line =~ /\S/ }
       end
       return "" if lines.empty?
+      return lines.map { "" }.join("\n") if line.nil?
 
       # Only align to given column if first line is not indented
       if String::Text.indentation(line) == 0
