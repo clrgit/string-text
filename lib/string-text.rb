@@ -12,7 +12,10 @@ module String::Text
     # uses the indent of the least indented non-empty line as the indent of the
     # block that is then aligned as a whole to the given column; lines starting
     # at column one are realigned to the indent of the previous line. Initial
-    # and final empty lines are ignored.
+    # and final empty lines are ignored
+    #
+    # If :bol is false then the first line won't be indented or outdented. If
+    # :empty is false (the default), initial and final blank lines are removed
     #
     # FIXME: make the special rule for lines starting at column one an option
     #
@@ -48,18 +51,23 @@ module String::Text
     #
     # If :bol is false then the first line won't be indented or outdented
     #
-    def align(column = 1, bol: true)
+    def align(column = 1, bol: true, empty: false)
       column > 0 or raise ArgumentError "Illegal column: #{column}"
       initial = " " * (column - 1)
 
       # Remove initial and final empty lines
-      lines = self.split(/\n/).map &:rstrip
-      lines.pop while !lines.empty? && !(lines.last =~ /^\s*\S/)
-      lines.shift while !lines.empty? && !(lines.first =~ /^\s*\S/)
+      lines = self.split(/\n/, -1).map &:rstrip
+      if !empty
+        lines.pop while !lines.empty? && !(lines.last =~ /^\s*\S/)
+        lines.shift while !lines.empty? && !(lines.first =~ /^\s*\S/)
+        line = lines.first # First non-empty line
+      else
+        line = lines.find { |line| line =~ /\S/ }
+      end
       return "" if lines.empty?
 
       # Only align to given column if first line is not indented
-      if String::Text.indentation(lines.first) == 0
+      if String::Text.indentation(line) == 0
         return lines.map { |line| ' ' * (column-1) + line }.join("\n")
       end
 

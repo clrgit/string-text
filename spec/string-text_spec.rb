@@ -17,8 +17,9 @@ describe "String::Text" do
         expect("text  ".align).to eq "text"
       end
     end
+
     context "when given a multiline string" do
-      it "ignores initial empty lines" do
+      it "ignores initial and final empty lines" do
         expect("\n\ntext".align).to eq "text"
       end
       it "realigns lines starting at column 1" do
@@ -63,22 +64,31 @@ describe "String::Text" do
         expect("  text\n\n    text".align).to eq "text\n\n  text"
       end
     end
-      context "when first line is not indented" do
-        it "does not remove initial indent" do
-          expect("line1\n  line2".align).to eq "line1\n  line2"
-        end
-        it "realigns everything as a block" do
-          expect("line1\n  line2".align(3)).to eq "  line1\n    line2"
-        end
-        it "does not realign unindented lines" do
-          expect("line1\n  line2\nline3\n  line4".align).to eq "line1\n  line2\nline3\n  line4"
-        end
+
+    context "when first line is not indented" do
+      it "does not remove initial indent" do
+        expect("line1\n  line2".align).to eq "line1\n  line2"
       end
+      it "realigns everything as a block" do
+        expect("line1\n  line2".align(3)).to eq "  line1\n    line2"
+      end
+      it "does not realign unindented lines" do
+        expect("line1\n  line2\nline3\n  line4".align).to eq "line1\n  line2\nline3\n  line4"
+      end
+    end
+
     context "when column != 1" do
       it "indents the text to the given column" do
         expect("  text\n\n    text".align(3)).to eq "  text\n\n    text"
       end
     end
+
+    context "when :empty is true" do
+      it "keeps initial and final empty lines" do
+        expect("\n\n  text\n    text\n\n".align(empty: true)).to eq "\n\ntext\n  text\n\n"
+      end
+    end
+
     context "when :bol is false" do
       it "do not align the first line" do
         inner_text = %(
