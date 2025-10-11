@@ -6,6 +6,11 @@ describe "String::Text" do
   end
 
   describe "#align" do
+    context "when given a string of blanks" do
+      it "returns the empty string" do
+        expect("  ".align).to eq ""
+      end
+    end
     context "when given a string w/o newlines" do
       it "removes initial indent" do
         expect("  text".align).to eq "text"
@@ -83,9 +88,12 @@ describe "String::Text" do
       end
     end
 
-    context "when :empty is true" do
+    context "when :empty is true X" do
       it "keeps initial and final empty lines" do
         expect("\n\n  text\n    text\n\n".align(empty: true)).to eq "\n\ntext\n  text\n\n"
+      end
+      it "handles empty lines" do
+        expect("\n  ".align(empty: true)).to eq "\n"
       end
     end
 
