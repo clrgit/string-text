@@ -5,8 +5,6 @@ require_relative "string-text/version"
 module String::Text
   class Error < StandardError; end
 
-  def self.indentation(s) s =~ /^(\s*)/; $1.size end
-
   refine String do
     # Indent or outdent a block of text to the given column (default 1). It
     # uses the indent of the least indented non-empty line as the indent of the
@@ -68,12 +66,12 @@ module String::Text
       return lines.map { "" }.join("\n") if line.nil?
 
       # Only align to given column if first line is not indented
-      if String::Text.indentation(line) == 0
+      if line.indentation == 0
         return lines.map { |line| ' ' * (column-1) + line }.join("\n")
       end
 
       # Identation level of each line
-      indents = lines.map { String::Text.indentation(_1) }
+      indents = lines.map(&:indentation)
 
       # Find minimal indent, ignoring unindented lines
       indent = indents.select { _1 > 0 }.min || 0
@@ -98,6 +96,9 @@ module String::Text
 
     # Like #align but replaces the string
     def align!(column = 1, bol: true) = self.replace align(column, bol: bol)
+
+    # Indent of line
+    def indentation = (self[/\A *\S/]&.size || 1) - 1
 
     # Converts a string to a boolean so that "true" becomes true and that
     # "false" and the empty string becomes false. Any other string is an error

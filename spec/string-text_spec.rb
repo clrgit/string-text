@@ -127,6 +127,21 @@ describe "String::Text" do
     end
   end
 
+  describe "#indentation" do
+    it "returns the indentation of the string" do
+      s = "  text"
+      expect(s.indentation).to eq 2
+    end
+    it "returns 0 if the string is blank" do
+      s = "  "
+      expect(s.indentation).to eq 0
+    end
+    it "returns 0 if the string is empty" do
+      s = ""
+      expect(s.indentation).to eq 0
+    end
+  end
+
   describe "#to_b" do
     it "translates 'true' to true" do
       expect("true".to_b).to eq true
